@@ -4,23 +4,35 @@ import DialogItem from "./DialogItem/DialogItem";
 import Message from "./Message/Message";
 import { Redirect } from "react-router-dom";
 import AddMessageForm from "./AddMessageForm/AddMessageForm";
+import { InitialStateType } from '../../redux/dialogs-reducer'
 
-const Dialogs = (props) => {
-  let state = props.dialogsPage;
+interface OwnProps {
+  dialogsPage: InitialStateType
+  sendMessage: (messageText: string) => void
+  isAuth: boolean
+}
 
-  let dialogsElements = state.dialogs.map((d) => (
+export interface NewMessageForm {
+  newMessageBody: string
+}
+
+
+
+const Dialogs: React.FC<OwnProps> = ({ dialogsPage, sendMessage, isAuth }) => {
+  let state = dialogsPage;
+
+  const dialogsElements = state.dialogs.map((d) => (
     <DialogItem name={d.name} key={d.id} id={d.id} />
   ));
-  let messagesElements = state.messages.map((m) => (
+  const messagesElements = state.messages.map((m) => (
     <Message message={m.message} key={m.id} />
   ));
-  let newMessageBody = state.newMessageBody;
 
-  let addNewMessage = (values) => {
-    props.sendMessage(values.newMessageBody);
+  let addNewMessage = (values: NewMessageForm) => {
+    sendMessage(values.newMessageBody);
   };
 
-  if (!props.isAuth) return <Redirect to={"/login"} />;
+  // if (!isAuth) return <Redirect to={"/login"} />;
 
   return (
     <div className={s.dialogs}>
