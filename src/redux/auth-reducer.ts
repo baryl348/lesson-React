@@ -2,14 +2,15 @@ import { ResultCodeForCaptcha } from './../api/api';
 import {authAPI, ResultCodeEnum, securityAPI} from "../api/api";
 import { stopSubmit } from "redux-form";
 import { BaseThunkType, InferActionsType } from './redux-store';
+import { NullType } from '../types/types';
 
 
 let initialState = {
-    userId: null as (number | null),
-    email: null as string | null,
-    login: null as string | null,
+    userId: null as NullType<number>,
+    email: null as NullType<string>,
+    login: null as NullType<string>,
     isAuth: false,
-    captchaUrl: null as string | null// if null, then captcha is not required
+    captchaUrl: null as NullType<string>
 };
 
 export type InitialStateType = typeof initialState;

@@ -1,6 +1,6 @@
 import {profileAPI, usersAPI} from "../api/api";
 import {stopSubmit} from "redux-form";
-import {PhotosType, PostType, ProfileType} from '../types/types';
+import {NullType, PhotosType, PostType, ProfileType} from '../types/types';
 import { BaseThunkType,  InferActionsType } from "./redux-store";
 
 
@@ -13,7 +13,7 @@ let initialState = {
         {id: 3, message: 'Blabla', likesCount: 11},
         {id: 4, message: 'Dada', likesCount: 11}
     ] as Array<PostType>,
-    profile: null as ProfileType | null,
+    profile: null as NullType<ProfileType>,
     status: '',
 };
 export type InitialStateType = typeof initialState;

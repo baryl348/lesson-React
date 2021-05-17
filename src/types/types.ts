@@ -34,3 +34,6 @@ export type UserType = {
     photos: PhotosType
     followed:boolean
 }
+
+// Generic type with state redux
+export type NullType<T> = null | T

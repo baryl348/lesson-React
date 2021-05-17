@@ -1,6 +1,6 @@
 
 import { PhotosType, ProfileType, UserType } from './../types/types';
-import  axios from "axios";
+import axios from "axios";
 
 const instance = axios.create({
   withCredentials: true,
@@ -13,46 +13,46 @@ const instance = axios.create({
 
 
 export const usersAPI = {
-  async getUsers(currentPage = 1, pageSize = 10) {
+  async getUsers(currentPage = 1, pageSize = 10, term = '', friend = null as null | boolean) {
     const response = await instance
-      .get<GetItemType>(`users?page=${currentPage}&count=${pageSize}`);
+      .get<GetItemType>(`users?page=${currentPage}&count=${pageSize}&term=${term}` + (friend === null ? '' : `&friend=${friend}`));
     return response.data;
   },
-  follow(userId:number) {
-    return instance.post<ResponseType>(`follow/${userId}`)
+  async follow(userId: number) {
+    return (await instance.post<ResponseType>(`follow/${userId}`)).data
   },
-  unfollow(userId:number) {
-    return instance.delete<ResponseType>(`follow/${userId}`)
+  async unfollow(userId: number) {
+    return (await instance.delete<ResponseType>(`follow/${userId}`)).data
   },
-  getProfile(userId:number) {
+  getProfile(userId: number) {
     return profileAPI.getProfile(userId);
   },
 };
 
 export const profileAPI = {
-  async getProfile(userId:number) {
+  async getProfile(userId: number) {
     const res = await instance.get<ProfileType>(`profile/` + userId);
-  return res.data
+    return res.data
   },
-  async getStatus(userId:number) {
+  async getStatus(userId: number) {
     const res = await instance.get<string>(`profile/status/` + userId);
     return res.data;
   },
-  async updateStatus(status:string) {
+  async updateStatus(status: string) {
     const res = await instance.put<UpdateResponseStatus>(`profile/status`, { status: status });
-     return res.data
+    return res.data
   },
-   async savePhoto(photoFile:File) {
+  async savePhoto(photoFile: File) {
     const formData = new FormData();
     formData.append("image", photoFile);
     const res = await instance.put<ResponseType<ResponseSavePhoto>>(`profile/photo`, formData, {
-       headers: {
-         "Content-Type": "multipart/form-data",
-       },
-     });
-     return res.data;
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return res.data;
   },
-  saveProfile(profile:ProfileType) {
+  saveProfile(profile: ProfileType) {
     return instance.put<ResponseType>(`profile`, profile);
   },
 };
@@ -62,8 +62,8 @@ export const authAPI = {
     const res = await instance.get<ResponseType<MeResponseType>>(`auth/me`);
     return res.data;
   },
-  async login(email:string, password:string, rememberMe = false, captcha:null | string = null ) {
-    const res = await instance.post<ResponseType<LoginResponseType, ResultCodeEnum | ResultCodeForCaptcha >>(`auth/login`, {
+  async login(email: string, password: string, rememberMe = false, captcha: null | string = null) {
+    const res = await instance.post<ResponseType<LoginResponseType, ResultCodeEnum | ResultCodeForCaptcha>>(`auth/login`, {
       email,
       password,
       rememberMe,
@@ -78,56 +78,56 @@ export const authAPI = {
 };
 
 export const securityAPI = {
- async getCaptchaUrl() {
+  async getCaptchaUrl() {
     const res = await instance.get<GetCaptchaUrlResponse>(`security/get-captcha-url`);
-  return res.data
+    return res.data
   },
 };
 
-type ResponseType <D={}, R=ResultCodeEnum> = {
-  data:D
-  resultCode:R
-  messages:Array<string>
-  }
+export type ResponseType<D = {}, R = ResultCodeEnum> = {
+  data: D
+  resultCode: R
+  messages: Array<string>
+}
 
-export enum ResultCodeEnum{
+export enum ResultCodeEnum {
   Success = 0,
   Error = 1,
+}
+export enum ResultCodeForCaptcha {
+  captchaIsRequired = 10
+}
+type MeResponseType = {
+  id: number
+  email: string
+  login: string
+}
+type LoginResponseType = {
+  userId: number
+}
+type LogoutResponseType = {
+  resultCode: ResultCodeEnum
+  messages: Array<string>
+  data: {}
+}
+
+type GetItemType = {
+  items: Array<UserType>
+  totalCount: number
+  error: string | null
+}
+
+
+type UpdateResponseStatus = {
+  data: {
+    resultCode: ResultCodeEnum
   }
-  export enum ResultCodeForCaptcha{
-    captchaIsRequired = 10
-    }
-  type MeResponseType = {
-    id:number
-    email:string
-    login:string
-  }
-  type LoginResponseType = {
-    userId:number
-  }
-  type LogoutResponseType = {
-    resultCode:ResultCodeEnum
-    messages:Array<string>
-    data:{}
-  }
-  
-  type GetItemType = {
-    items:Array<UserType>
-    totalCount:number
-    error: string | null
-  }
-    
-  
-  type UpdateResponseStatus = {
-    data:{
-      resultCode:ResultCodeEnum
-    }
-  }
-  
-  type ResponseSavePhoto = {
-    photos:PhotosType
-  }
+}
+
+type ResponseSavePhoto = {
+  photos: PhotosType
+}
 
 type GetCaptchaUrlResponse = {
-  url:string
+  url: string
 }

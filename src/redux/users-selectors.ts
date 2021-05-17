@@ -33,3 +33,8 @@ export const countSomethingDifficult = (state: AppStateType) => {
   let count = 23;
   return count;
 };
+
+// filter or search
+export const filterTerm = (state: AppStateType) => {
+  return state.usersPage.filter
+}

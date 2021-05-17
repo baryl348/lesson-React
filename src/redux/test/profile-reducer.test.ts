@@ -1,15 +1,15 @@
-import profileReducer, { actionsProfile } from "./profile-reducer";
+import profileReducer, { actionsProfile } from "../profile-reducer";
 import ReactDOM from "react-dom";
-import App from "../App";
+import App from "../../App";
 import React from "react";
-import { ProfileType } from "../types/types";
+import { ProfileType } from "../../types/types";
 
 let state = {
     posts: [
-        {id: 1, message: 'Hi, how are you?', likesCount: 12},
-        {id: 2, message: 'It\'s my first post', likesCount: 11},
-        {id: 3, message: 'Blabla', likesCount: 11},
-        {id: 4, message: 'Dada', likesCount: 11}
+        { id: 1, message: 'Hi, how are you?', likesCount: 12 },
+        { id: 2, message: 'It\'s my first post', likesCount: 11 },
+        { id: 3, message: 'Blabla', likesCount: 11 },
+        { id: 4, message: 'Dada', likesCount: 11 }
     ],
     profile: null as ProfileType | null,
     status: ''
